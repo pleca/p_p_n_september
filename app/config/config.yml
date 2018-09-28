@@ -1,0 +1,107 @@
+imports:
+    - { resource: parameters.yml }
+    - { resource: security.yml }
+    - { resource: services.yml }
+
+# Put parameters here that don't need to change on each machine where the app is deployed
+# https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
+parameters:
+    locale: pl
+    temp_dir: '%kernel.project_dir%/temp/'
+    ajax_allow_domain: 'https://umowy'
+    client_panel_api_url: 'http://192.168.3.136:9999/VotumRestApi/ClientPanel/'
+    rest_api_url: 'http://192.168.3.136:9062/TerytApi/v1/'
+    rest_api_key: false
+    rest_api_agent_url: 'http://192.168.1.18:9999/VotumRestApi/AgentPanel/'
+    rest_api_agent_key: '{bbb6db2f-463f-418d-867c-8824b533b8cb}'
+    rest_api_client_key: '{bbb6db2f-463f-418d-867c-8824b533b8ce}'
+    frank_api_url: 'http://192.168.1.38:6111/CIService/'
+    frank_api_key: '{8e000f39-5411-49d7-83c3-4085c6d8df91}'
+    check_api_key: false
+    docs_directory: '%kernel.project_dir%/src/AppBundle/Upload/Documents/'
+    api_key:
+              '1aa53f75-55c8-41a7-8554-25e094c71b47':
+                                                    - '195.205.225.21;10.0.0.27;10.0.0.15'
+                                                    - 'VOTUM-SA'
+              '6dd53f75-asc8-41a7-8554-25e094c71b47':
+                                                    - '127.0.0.1'
+                                                    - 'SERVICE'
+######################################################################
+framework:
+    #esi: ~
+    #translator: { fallbacks: ['%locale%'] }
+    secret: '%secret%'
+    router:
+        resource: '%kernel.project_dir%/app/config/routing.yml'
+        strict_requirements: ~
+    form: ~
+    csrf_protection: ~
+    validation: { enable_annotations: true }
+    #serializer: { enable_annotations: true }
+    default_locale: '%locale%'
+    trusted_hosts: ~
+    session:
+        # https://symfony.com/doc/current/reference/configuration/framework.html#handler-id
+        handler_id: session.handler.native_file
+        save_path: '%kernel.project_dir%/var/sessions/%kernel.environment%'
+    fragments: ~
+    http_method_override: true
+    assets: ~
+    php_errors:
+        log: true
+
+# Twig Configuration
+twig:
+    debug: '%kernel.debug%'
+    strict_variables: '%kernel.debug%'
+
+# Doctrine Configuration
+doctrine:
+    dbal:
+        default_connection: database
+        connections:
+            database:
+                    driver: pdo_mysql
+                    host: '%database_host%'
+                    port: '%database_port%'
+                    dbname: '%database_name%'
+                    user: '%database_user%'
+                    password: '%database_password%'
+                    charset: UTF8
+            olddb:
+                   driver: pdo_mysql
+                   host: '%olddb_host%'
+                   port: '%olddb_port%'
+                   dbname: '%olddb_name%'
+                   user: '%olddb_user%'
+                   password: '%olddb_password%'
+                   charset: UTF8
+    orm:
+        auto_generate_proxy_classes: "%kernel.debug%"
+        default_entity_manager: database
+        entity_managers:
+                    database:
+                        naming_strategy: doctrine.orm.naming_strategy.underscore
+                        connection: database
+                        auto_mapping: true
+                        mappings:
+                            AppBundle:  ~
+                        dql:
+                            string_functions:
+                                MATCH_AGAINST: ourcodeworld\Extensions\Doctrine\MatchAgainst
+                    olddb:
+                        naming_strategy: doctrine.orm.naming_strategy.underscore
+                        connection: olddb
+                        mappings:
+                            AppBundle: ~
+                        dql:
+                            string_functions:
+                                MATCH_AGAINST: ourcodeworld\Extensions\Doctrine\MatchAgainst
+
+# Swiftmailer Configuration
+swiftmailer:
+    transport: '%mailer_transport%'
+    host: '%mailer_host%'
+    username: '%mailer_user%'
+    password: '%mailer_password%'
+    spool: { type: memory }
